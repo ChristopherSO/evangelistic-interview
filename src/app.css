@@ -1,0 +1,40 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+* {
+	box-sizing: border-box;
+	color: var(--bs-body-color);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+}
+
+#app {
+    width: 100%;
+	min-width: 320px;
+    overflow: hidden;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+p {
+	margin-top: 0;
+}
+
+.btn {
+    min-width: 80px;
+}
+
+.dropdown-toggle {
+	min-width: 100px;
+}
