@@ -14,7 +14,6 @@
 
 <div
 	class="slide-component"
-	class:visible={slide.isVisible}
 	bind:clientHeight={slide.componentHeight}
 >
 	<div class="content">
@@ -60,12 +59,6 @@
 		flex-direction: column;
 		justify-content: space-between;
 		gap: 1rem;
-    	opacity: 0;
-		transition: opacity 300ms ease 0s;
-
-		&.visible {
-			opacity: 1;
-		}
 	}
 
 	.content {

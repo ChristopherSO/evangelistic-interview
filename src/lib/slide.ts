@@ -11,7 +11,6 @@ export class SlideClass {
 	sinText?: string;
 	buttons: IButton[];
 	componentHeight: number;
-	isVisible?: boolean;
 
 	constructor(props: {question: string, buttons: IButton[], sinText?: string}) {
 		this.question = props.question;

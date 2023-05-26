@@ -3,61 +3,43 @@ import { get, writable } from "svelte/store";
 import { SlideClass } from "./slide";
 
 const defaultSlideHeight = 300; // TODO: usar la altura del primer Slide
-export const windowHeight = writable(defaultSlideHeight);
+export const slidesContainerHeight = writable(defaultSlideHeight);
 export const slideStack = writable<SlideClass[]>([]);
-export const slidesWrapperTranslatePixels = writable(0);
 
-const slidesGap = 200;
-const transitionDurationInMilliseconds = 400;
 const sins = writable<string[]>([]);
 
 export async function addSlideByKey(slideKey) {
 	const stack = get(slideStack);
-	const lastSlide = stack.at(-1);
-	// Set the current last slide as invisible
-	lastSlide.isVisible = false;
+
 	// Get the new slide to add
-	const newSlide = slidesData[slideKey];
-	// Now the new slide will be the one visible
-	newSlide.isVisible = true;
+	const nextSlide = slidesData[slideKey];
+
 	// Add the new slide to the stack
-	stack.push(newSlide);
+	stack.push(nextSlide);
+
 	// Update the store
 	slideStack.set(stack);
 
 	// Let the new Slide render in order to get its height
 	await tick();
-	
-	// Update the slide wrapper translate distance
-	slidesWrapperTranslatePixels.set(get(slidesWrapperTranslatePixels) - (slidesGap + lastSlide.componentHeight));
 
 	// Notify the window element in App.svelte about the new height
-	windowHeight.set(newSlide.componentHeight);
+	slidesContainerHeight.set(nextSlide.componentHeight);
 }
 
 export async function removeLastSlide() {
 	const stack = get(slideStack);
-	const lastSlide = stack.at(-1);
-	const penultimateSlide = stack.at(-2);
-	
-	if (penultimateSlide.sinText) {
+	const previousSlide = stack.at(-2);
+
+	if (previousSlide.sinText) {
 		// Remove sin text from the previous slide
-		sins.set(get(sins).filter(sin => sin !== penultimateSlide.sinText));
+		sins.set(get(sins).filter(sin => sin !== previousSlide.sinText));
 	}
 
-	// Update the visibility of last and penultimate slides
-	lastSlide.isVisible = false;
-	penultimateSlide.isVisible = true;
-	slideStack.set(stack);
-
-	// Update the slide wrapper translate distance
-	slidesWrapperTranslatePixels.set(get(slidesWrapperTranslatePixels) + (slidesGap + penultimateSlide.componentHeight));
-
 	// Notify the window element in App.svelte about the new height
-	windowHeight.set(penultimateSlide.componentHeight);
+	slidesContainerHeight.set(previousSlide.componentHeight);
 
-	// Remove the last slide until the transition ends
-	await new Promise(resolve => setTimeout(resolve, transitionDurationInMilliseconds));
+	// Remove the last slide from the stack and update the store
 	slideStack.set(stack.slice(0, -1));
 }
 
@@ -419,5 +401,4 @@ sins.subscribe(() => updateSinsSlide());
 
 // Set the first slide
 const firstSlide = slidesData.first;
-firstSlide.isVisible = true;
 slideStack.set([firstSlide]);

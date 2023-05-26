@@ -9,5 +9,4 @@ export interface IButton {
 export interface ISlide {
 	question: string,
 	buttons: IButton[],
-	isVisible?: boolean,
 }
